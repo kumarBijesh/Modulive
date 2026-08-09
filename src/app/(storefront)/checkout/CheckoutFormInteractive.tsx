@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { createCheckoutSessionAction } from '@/actions/checkout-actions'
 import { getCurrentUserAction } from '@/actions/auth-actions'
-import { Lock, ShieldCheck, CreditCard, ArrowRight, User as UserIcon } from 'lucide-react'
+import { Lock, CreditCard } from 'lucide-react'
 
 export interface CheckoutFormInteractiveProps {
   cart: {
@@ -28,11 +28,11 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
     fullName: '',
     guestEmail: '',
     address: {
-      street: '742 Design Quarter Ave',
-      city: 'New York',
-      state: 'NY',
-      postalCode: '10001',
-      country: 'United States',
+      street: '',
+      city: '',
+      state: '',
+      postalCode: '',
+      country: '',
     },
   })
 
@@ -82,11 +82,11 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start max-w-5xl mx-auto">
+    <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start max-w-5xl mx-auto">
       {/* Shipping Address Inputs */}
-      <div className="lg:col-span-7 bg-card border border-border rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+      <div className="lg:col-span-7 bg-card border border-border rounded-2xl sm:rounded-3xl p-5 sm:p-8 space-y-6 shadow-xs">
         <div className="border-b border-border pb-4">
-          <h3 className="font-serif font-bold text-xl text-foreground">1. Contact & Shipping Address</h3>
+          <h3 className="font-serif font-bold text-lg sm:text-xl text-foreground">1. Contact & Shipping Address</h3>
           <p className="text-xs text-muted-foreground mt-1">Order confirmations and receipts will be sent to this email.</p>
         </div>
 
@@ -101,7 +101,7 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
             label="Full Name"
             type="text"
             required
-            placeholder="e.g. khelega frefire"
+            placeholder="e.g. Jane Doe"
             value={formData.fullName}
             onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
           />
@@ -110,7 +110,7 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
             label="Email Address"
             type="email"
             required
-            placeholder="e.g. khelegafrefire12@gmail.com"
+            placeholder="e.g. jane@example.com"
             value={formData.guestEmail}
             onChange={(e) => setFormData({ ...formData, guestEmail: e.target.value })}
           />
@@ -118,16 +118,18 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
           <Input
             label="Street Address"
             required
+            placeholder="e.g. 123 Main Street, Apt 4B"
             value={formData.address.street}
             onChange={(e) =>
               setFormData({ ...formData, address: { ...formData.address, street: e.target.value } })
             }
           />
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="City"
               required
+              placeholder="e.g. New York"
               value={formData.address.city}
               onChange={(e) =>
                 setFormData({ ...formData, address: { ...formData.address, city: e.target.value } })
@@ -136,6 +138,7 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
             <Input
               label="State / Province"
               required
+              placeholder="e.g. NY"
               value={formData.address.state}
               onChange={(e) =>
                 setFormData({ ...formData, address: { ...formData.address, state: e.target.value } })
@@ -143,10 +146,11 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
               label="Postal Code"
               required
+              placeholder="e.g. 10001"
               value={formData.address.postalCode}
               onChange={(e) =>
                 setFormData({ ...formData, address: { ...formData.address, postalCode: e.target.value } })
@@ -155,6 +159,7 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
             <Input
               label="Country"
               required
+              placeholder="e.g. United States"
               value={formData.address.country}
               onChange={(e) =>
                 setFormData({ ...formData, address: { ...formData.address, country: e.target.value } })
@@ -164,7 +169,7 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
         </div>
 
         <div className="pt-4 border-t border-border space-y-3">
-          <h3 className="font-serif font-bold text-lg text-foreground flex items-center gap-2">
+          <h3 className="font-serif font-bold text-base sm:text-lg text-foreground flex items-center gap-2">
             <CreditCard className="w-5 h-5 text-accent-terracotta" /> 2. Payment Method
           </h3>
           <div className="p-4 rounded-xl bg-accent-sage/20 border border-accent-sage/40 text-xs text-foreground space-y-1">
@@ -177,8 +182,8 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
       </div>
 
       {/* Order Summary & Submit */}
-      <div className="lg:col-span-5 bg-card border border-border rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm sticky top-28">
-        <h3 className="font-serif font-bold text-xl text-foreground border-b border-border pb-4">
+      <div className="lg:col-span-5 bg-card border border-border rounded-2xl sm:rounded-3xl p-5 sm:p-8 space-y-6 shadow-xs sticky top-24">
+        <h3 className="font-serif font-bold text-lg sm:text-xl text-foreground border-b border-border pb-4">
           Order Summary ({cart.items.length} items)
         </h3>
 
@@ -200,32 +205,32 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
         </div>
 
         <div className="space-y-2 text-sm pt-4 border-t border-border">
-          <div className="flex justify-between text-muted-foreground">
+          <div className="flex justify-between text-muted-foreground text-xs sm:text-sm">
             <span>Subtotal</span>
             <span className="text-foreground font-medium">{formatPrice(cart.subtotalCents)}</span>
           </div>
-          <div className="flex justify-between text-muted-foreground">
+          <div className="flex justify-between text-muted-foreground text-xs sm:text-sm">
             <span>Shipping</span>
             <span className="text-foreground font-medium">
               {cart.shippingCents === 0 ? 'FREE' : formatPrice(cart.shippingCents)}
             </span>
           </div>
-          <div className="flex justify-between text-muted-foreground">
+          <div className="flex justify-between text-muted-foreground text-xs sm:text-sm">
             <span>Tax</span>
             <span className="text-foreground font-medium">{formatPrice(cart.taxCents)}</span>
           </div>
 
-          <div className="pt-3 border-t border-border flex justify-between text-lg font-serif font-bold text-foreground">
+          <div className="pt-3 border-t border-border flex justify-between text-base sm:text-lg font-serif font-bold text-foreground">
             <span>Total Due</span>
             <span className="text-accent-terracotta">{formatPrice(cart.totalCents)}</span>
           </div>
         </div>
 
-        <Button type="submit" isLoading={loading} className="w-full py-4 text-sm font-semibold tracking-wider uppercase">
+        <Button type="submit" isLoading={loading} className="w-full py-3.5 sm:py-4 text-xs sm:text-sm font-semibold tracking-wider uppercase">
           Pay {formatPrice(cart.totalCents)} with Stripe Test
         </Button>
 
-        <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground pt-2">
+        <div className="flex items-center justify-center gap-2 text-[11px] text-muted-foreground pt-1">
           <Lock className="w-3.5 h-3.5" />
           <span>Server-side calculated prices & 256-Bit SSL</span>
         </div>
