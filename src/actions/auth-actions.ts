@@ -5,7 +5,7 @@ import { hashPassword } from '@/lib/hash'
 import { authenticateCredentials, setMockSession, getMockSession } from '@/lib/auth'
 import { rateLimiter } from '@/lib/security/rate-limiter'
 import { logAuditEvent } from '@/lib/security/audit-logger'
-import { prisma } from '@/lib/prisma'
+import { prisma, isDatabaseConfigured } from '@/lib/prisma'
 import { handleActionError, AppError } from '@/lib/errors'
 
 export async function loginAction(formData: unknown) {

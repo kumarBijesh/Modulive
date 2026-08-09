@@ -13,7 +13,7 @@ export default async function AdminAuditLogsPage() {
   }
 
   const logsRes = await adminGetAuditLogsAction()
-  const logs = logsRes.logs || []
+  const logs = logsRes.success && 'logs' in logsRes ? logsRes.logs : []
 
   return (
     <div className="min-h-screen flex bg-background">

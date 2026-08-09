@@ -31,8 +31,8 @@ export default async function AdminProductsPage() {
         </div>
 
         <AdminProductsTableInteractive
-          initialProducts={productsRes.products || []}
-          categories={categoriesRes.categories || []}
+          initialProducts={productsRes.success && 'products' in productsRes ? (productsRes.products as any) : []}
+          categories={categoriesRes.success && 'categories' in categoriesRes ? (categoriesRes.categories as any) : []}
         />
       </main>
     </div>

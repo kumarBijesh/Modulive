@@ -14,7 +14,7 @@ export default async function AdminDashboardPage() {
   }
 
   const metricsRes = await adminGetDashboardMetricsAction()
-  const metrics = metricsRes.metrics || {
+  const metrics = metricsRes.success && 'metrics' in metricsRes ? metricsRes.metrics : {
     totalProducts: 6,
     activeProducts: 6,
     lowStockCount: 2,
@@ -109,7 +109,7 @@ export default async function AdminDashboardPage() {
           </div>
 
           <div className="divide-y divide-border/60">
-            {metrics.lowStockProducts.map((p) => (
+            {metrics.lowStockProducts.map((p: any) => (
               <div key={p.id} className="py-4 flex items-center justify-between text-sm">
                 <div>
                   <h4 className="font-serif font-semibold text-foreground">{p.title}</h4>

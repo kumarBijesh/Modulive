@@ -6,8 +6,8 @@ import { mockProducts, mockCategories, prisma } from '@/lib/prisma'
 import { getMockAuditLogs, logAuditEvent } from '@/lib/security/audit-logger'
 import { AppError, ForbiddenError, handleActionError } from '@/lib/errors'
 
-function verifyAdminPermission() {
-  const session = getMockSession()
+async function verifyAdminPermission() {
+  const session = await getMockSession()
   if (!session || (session.role !== 'ADMIN' && session.role !== 'SUPER_ADMIN')) {
     throw new ForbiddenError('Administrative privileges required')
   }
@@ -16,7 +16,7 @@ function verifyAdminPermission() {
 
 export async function adminCreateProductAction(formData: unknown) {
   try {
-    const admin = verifyAdminPermission()
+    const admin = await verifyAdminPermission()
     const validated = productSchema.parse(formData)
 
     const slug = validated.title
@@ -52,7 +52,7 @@ export async function adminCreateProductAction(formData: unknown) {
 
 export async function adminUpdateProductAction(id: string, formData: unknown) {
   try {
-    const admin = verifyAdminPermission()
+    const admin = await verifyAdminPermission()
     const validated = productSchema.parse(formData)
 
     const index = mockProducts.findIndex((p) => p.id === id)
@@ -83,7 +83,7 @@ export async function adminUpdateProductAction(id: string, formData: unknown) {
 
 export async function adminDeleteProductAction(id: string) {
   try {
-    const admin = verifyAdminPermission()
+    const admin = await verifyAdminPermission()
     const index = mockProducts.findIndex((p) => p.id === id)
 
     if (index === -1) {
@@ -108,7 +108,7 @@ export async function adminDeleteProductAction(id: string) {
 
 export async function adminGetDashboardMetricsAction() {
   try {
-    verifyAdminPermission()
+    await verifyAdminPermission()
 
     const totalProducts = mockProducts.length
     const activeProducts = mockProducts.filter((p) => p.status === 'ACTIVE').length
@@ -134,7 +134,7 @@ export async function adminGetDashboardMetricsAction() {
 
 export async function adminGetAuditLogsAction() {
   try {
-    verifyAdminPermission()
+    await verifyAdminPermission()
     const logs = getMockAuditLogs()
     return { success: true, logs }
   } catch (err) {

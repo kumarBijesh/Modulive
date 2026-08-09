@@ -39,7 +39,7 @@ export default function LoginPage() {
         router.push('/account')
       }
     } else {
-      setError(res.error || 'Invalid credentials')
+      setError('error' in res ? (res as { error: string }).error : 'Invalid credentials')
     }
   }
 

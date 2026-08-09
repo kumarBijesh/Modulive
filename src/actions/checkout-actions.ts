@@ -37,11 +37,12 @@ export async function createCheckoutSessionAction(formData: unknown) {
 
     const sessionUser = await getMockSession()
     const email = sessionUser?.email || validated.guestEmail
-    const userName = sessionUser?.name || (validated.address as { fullName?: string })?.fullName || email.split('@')[0]
 
     if (!email) {
       throw new AppError('An email address is required for order confirmation', 400)
     }
+
+    const userName = sessionUser?.name || (validated.address as { fullName?: string })?.fullName || email.split('@')[0]
 
     // Generate unique order number
     const orderNumber = `MS-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000)}`
