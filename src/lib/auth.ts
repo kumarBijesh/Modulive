@@ -49,6 +49,31 @@ export async function getMockSession(): Promise<UserSession | null> {
 export async function authenticateCredentials(emailInput: string, passwordInput: string): Promise<UserSession | null> {
   const email = normalizeEmail(emailInput)
 
+  // 1. Check demo credentials priority to ensure instant demo login reliability
+  if (email === 'admin@mystore.com' && (passwordInput === 'AdminPassword123!' || passwordInput === 'admin')) {
+    const session: UserSession = {
+      id: 'admin-01',
+      name: 'Master Admin',
+      email: 'admin@mystore.com',
+      role: 'SUPER_ADMIN',
+    }
+    await logAuditEvent({ userId: session.id, userEmail: session.email, action: 'LOGIN_SUCCESS', resource: 'Auth' })
+    await setMockSession(session)
+    return session
+  }
+
+  if (email === 'customer@mystore.com' && (passwordInput === 'CustomerPassword123!' || passwordInput === 'customer')) {
+    const session: UserSession = {
+      id: 'cust-01',
+      name: 'Jane Customer',
+      email: 'customer@mystore.com',
+      role: 'CUSTOMER',
+    }
+    await logAuditEvent({ userId: session.id, userEmail: session.email, action: 'LOGIN_SUCCESS', resource: 'Auth' })
+    await setMockSession(session)
+    return session
+  }
+
   try {
     let user = null
     if (isDatabaseConfigured()) {
@@ -61,31 +86,6 @@ export async function authenticateCredentials(emailInput: string, passwordInput:
     }
 
     if (!user) {
-      // Check hardcoded demo credentials fallback
-      if (email === 'admin@mystore.com' && passwordInput === 'AdminPassword123!') {
-        const session: UserSession = {
-          id: 'admin-01',
-          name: 'Master Admin',
-          email: 'admin@mystore.com',
-          role: 'SUPER_ADMIN',
-        }
-        await logAuditEvent({ userId: session.id, userEmail: session.email, action: 'LOGIN_SUCCESS', resource: 'Auth' })
-        await setMockSession(session)
-        return session
-      }
-
-      if (email === 'customer@mystore.com' && passwordInput === 'CustomerPassword123!') {
-        const session: UserSession = {
-          id: 'cust-01',
-          name: 'Jane Customer',
-          email: 'customer@mystore.com',
-          role: 'CUSTOMER',
-        }
-        await logAuditEvent({ userId: session.id, userEmail: session.email, action: 'LOGIN_SUCCESS', resource: 'Auth' })
-        await setMockSession(session)
-        return session
-      }
-
       await logAuditEvent({ userEmail: email, action: 'LOGIN_FAILED_NOT_FOUND', resource: 'Auth' })
       return null
     }

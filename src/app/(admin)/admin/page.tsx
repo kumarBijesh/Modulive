@@ -2,9 +2,10 @@ import React from 'react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
+import { AdminHeaderActions } from '@/components/admin/AdminHeaderActions'
 import { getCurrentUserAction } from '@/actions/auth-actions'
 import { adminGetDashboardMetricsAction } from '@/actions/admin-actions'
-import { DollarSign, Package, AlertTriangle, ShoppingCart, Plus, ShieldAlert } from 'lucide-react'
+import { DollarSign, Package, AlertTriangle, ShoppingCart } from 'lucide-react'
 
 export default async function AdminDashboardPage() {
   const user = await getCurrentUserAction()
@@ -28,26 +29,21 @@ export default async function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen flex bg-background">
+    <div className="min-h-screen flex flex-col md:flex-row bg-background w-full">
       <AdminSidebar />
 
-      <main className="flex-1 p-8 sm:p-12 overflow-y-auto">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-border">
+      <main className="flex-1 p-4 sm:p-8 lg:p-12 overflow-y-auto w-full">
+        {/* Header with AdminHeaderActions */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-border">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-widest text-accent-terracotta">
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-accent-terracotta">
               Admin Control Panel
             </span>
-            <h1 className="text-3xl font-serif font-bold text-foreground">Dashboard Overview</h1>
-            <p className="text-xs text-muted-foreground mt-1">Logged in as {user.name} ({user.email})</p>
+            <h1 className="text-lg sm:text-3xl font-serif font-bold text-foreground tracking-tight">Dashboard Overview</h1>
+            <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 truncate">Logged in as {user.name} ({user.email})</p>
           </div>
 
-          <Link
-            href="/admin/products"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background hover:bg-accent-warm hover:text-white rounded-full text-xs font-semibold uppercase tracking-wider transition-all shadow-sm"
-          >
-            <Plus className="w-4 h-4" /> Add Product
-          </Link>
+          <AdminHeaderActions />
         </div>
 
         {/* Metric KPI Cards */}

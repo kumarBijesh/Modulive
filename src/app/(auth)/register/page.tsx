@@ -43,17 +43,17 @@ export default function RegisterPage() {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      <main className="flex-1 max-w-md mx-auto px-4 py-16 w-full flex items-center">
-        <div className="bg-card border border-border rounded-3xl p-8 space-y-6 shadow-card w-full">
-          <div className="text-center space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-widest text-accent-terracotta">
+      <main className="flex-1 max-w-md mx-auto px-4 py-8 sm:py-16 w-full flex items-center">
+        <div className="bg-card border border-border rounded-2xl sm:rounded-3xl p-5 sm:p-8 space-y-5 sm:space-y-6 shadow-card w-full">
+          <div className="text-center space-y-1.5 sm:space-y-2">
+            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-accent-terracotta">
               New Customer
             </span>
-            <h1 className="text-3xl font-serif font-bold text-foreground">Create your account</h1>
+            <h1 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">Create your account</h1>
           </div>
 
           {error && (
-            <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
+            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium leading-relaxed">
               {error}
             </div>
           )}
@@ -79,12 +79,12 @@ export default function RegisterPage() {
               label="Password"
               type="password"
               required
-              helperText="Must be at least 8 characters with 1 uppercase letter and 1 number."
+              helperText="Must be 8–16 characters with at least 1 uppercase, 1 lowercase, 1 number, and 1 special character."
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            <Button type="submit" isLoading={loading} className="w-full py-4 text-xs font-semibold tracking-wider uppercase">
+            <Button type="submit" isLoading={loading} className="w-full py-3.5 text-xs font-semibold tracking-wider uppercase">
               Create Account
             </Button>
           </form>

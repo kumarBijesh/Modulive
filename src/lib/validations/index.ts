@@ -10,10 +10,12 @@ export const registerSchema = z.object({
   email: z.string().email('Please enter a valid email address').max(255),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters')
-    .max(100)
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-    .regex(/[0-9]/, 'Password must contain at least one number'),
+    .min(8, 'Password must be between 8 and 16 characters')
+    .max(16, 'Password must be between 8 and 16 characters')
+    .regex(/[A-Z]/, 'Password must contain at least 1 uppercase letter')
+    .regex(/[a-z]/, 'Password must contain at least 1 lowercase letter')
+    .regex(/[0-9]/, 'Password must contain at least 1 number')
+    .regex(/[^A-Za-z0-9]/, 'Password must contain at least 1 special character'),
 })
 
 export const productSchema = z.object({

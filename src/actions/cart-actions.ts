@@ -3,7 +3,6 @@
 import { cookies } from 'next/headers'
 import { cartItemSchema } from '@/lib/validations'
 import { mockProducts, prisma, isDatabaseConfigured } from '@/lib/prisma'
-import { getMockSession } from '@/lib/auth'
 import { AppError, handleActionError } from '@/lib/errors'
 
 export interface CartLineItem {
@@ -16,18 +15,7 @@ export interface CartLineItem {
   maxStock: number
 }
 
-// Initial Default Starter Item
-const defaultCartItem: CartLineItem = {
-  productId: 'prod-01',
-  title: 'Modulive Bouclé Curved Lounge Armchair',
-  slug: 'modulive-boucle-curved-lounge-armchair',
-  priceCents: 125000,
-  quantity: 1,
-  image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
-  maxStock: 14,
-}
-
-let inMemoryCartCache: CartLineItem[] = [defaultCartItem]
+let inMemoryCartCache: CartLineItem[] = []
 
 async function readCartFromCookie(): Promise<CartLineItem[]> {
   try {
@@ -36,6 +24,7 @@ async function readCartFromCookie(): Promise<CartLineItem[]> {
     if (cartCookie?.value) {
       return JSON.parse(cartCookie.value) as CartLineItem[]
     }
+    return []
   } catch (e) {
     // Cookie unmounted context fallback
   }
@@ -79,7 +68,31 @@ export async function addToCartAction(productId: string, quantity = 1) {
     cartItemSchema.parse({ productId, quantity })
 
     const currentCart = await readCartFromCookie()
-    const product = mockProducts.find((p) => p.id === productId)
+    let product: any = mockProducts.find((p) => p.id === productId || p.slug === productId)
+
+    if (!product && isDatabaseConfigured()) {
+      try {
+        const dbProd = await prisma.product.findFirst({
+          where: {
+            OR: [{ id: productId }, { slug: productId }],
+          },
+          include: { category: true },
+        })
+        if (dbProd) {
+          product = {
+            id: dbProd.id,
+            title: dbProd.title,
+            slug: dbProd.slug,
+            priceCents: dbProd.priceCents,
+            stock: dbProd.stock,
+            images: dbProd.images,
+          }
+        }
+      } catch (dbErr) {
+        console.warn('MongoDB cart product lookup fallback:', dbErr)
+      }
+    }
+
     if (!product) {
       throw new AppError('Product not found', 404)
     }
@@ -89,7 +102,9 @@ export async function addToCartAction(productId: string, quantity = 1) {
     }
 
     const updatedCart = [...currentCart]
-    const existingIndex = updatedCart.findIndex((i) => i.productId === productId)
+    const existingIndex = updatedCart.findIndex(
+      (i) => i.productId === product.id || i.productId === productId || i.slug === product.slug
+    )
 
     if (existingIndex > -1) {
       const newQty = updatedCart[existingIndex].quantity + quantity
@@ -104,7 +119,7 @@ export async function addToCartAction(productId: string, quantity = 1) {
         slug: product.slug,
         priceCents: product.priceCents,
         quantity,
-        image: product.images[0] || '',
+        image: product.images?.[0] || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80',
         maxStock: product.stock,
       })
     }

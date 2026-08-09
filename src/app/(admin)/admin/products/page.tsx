@@ -16,16 +16,16 @@ export default async function AdminProductsPage() {
   const categoriesRes = await getCategoriesAction()
 
   return (
-    <div className="min-h-screen flex bg-background">
+    <div className="min-h-screen flex flex-col md:flex-row bg-background w-full">
       <AdminSidebar />
 
-      <main className="flex-1 p-8 sm:p-12 overflow-y-auto w-full">
-        <div className="mb-8 pb-6 border-b border-border">
-          <span className="text-xs font-semibold uppercase tracking-widest text-accent-terracotta">
+      <main className="flex-1 p-4 sm:p-8 lg:p-12 overflow-y-auto w-full">
+        <div className="mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-border">
+          <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-accent-terracotta">
             Inventory & Catalog
           </span>
-          <h1 className="text-3xl font-serif font-bold text-foreground">Product Management</h1>
-          <p className="text-xs text-muted-foreground mt-1">
+          <h1 className="text-lg sm:text-3xl font-serif font-bold text-foreground tracking-tight">Product Management</h1>
+          <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-relaxed">
             Create, update, or remove furniture pieces from the active storefront catalog.
           </p>
         </div>

@@ -24,7 +24,70 @@ export interface OrderRecord {
   createdAt: Date
 }
 
-const mockOrders: OrderRecord[] = []
+const mockOrders: OrderRecord[] = [
+  {
+    id: 'ord-cust-01',
+    orderNumber: 'MS-894210-402',
+    userEmail: 'customer@mystore.com',
+    userName: 'Jane Customer',
+    items: [
+      {
+        title: 'Modulive Bouclé Curved Lounge Armchair',
+        priceCents: 125000,
+        quantity: 1,
+        image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=400&q=80',
+      },
+      {
+        title: 'Aura Opal Glass & Brushed Brass Floor Lamp',
+        priceCents: 68000,
+        quantity: 1,
+        image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=400&q=80',
+      },
+    ],
+    subtotalCents: 193000,
+    shippingCents: 4900,
+    taxCents: 10000,
+    totalCents: 207900,
+    status: 'PROCESSING',
+    paymentStatus: 'PAID',
+    shippingAddress: {
+      street: '742 Design Quarter Ave',
+      city: 'New York',
+      state: 'NY',
+      postalCode: '10001',
+      country: 'United States',
+    },
+    createdAt: new Date(Date.now() - 86400000 * 2),
+  },
+  {
+    id: 'ord-demo-02',
+    orderNumber: 'MS-782190-109',
+    userEmail: 'admin@mystore.com',
+    userName: 'Master Admin',
+    items: [
+      {
+        title: 'Kobenhavn Solid White Oak Dining Table',
+        priceCents: 240000,
+        quantity: 1,
+        image: 'https://images.unsplash.com/photo-1530018607912-eff2daa1bac4?auto=format&fit=crop&w=400&q=80',
+      },
+    ],
+    subtotalCents: 240000,
+    shippingCents: 0,
+    taxCents: 12000,
+    totalCents: 252000,
+    status: 'DELIVERED',
+    paymentStatus: 'PAID',
+    shippingAddress: {
+      street: '108 Design Quarter Way',
+      city: 'Copenhagen',
+      state: 'NY',
+      postalCode: '10001',
+      country: 'Denmark',
+    },
+    createdAt: new Date(Date.now() - 86400000 * 7),
+  },
+]
 
 export async function createCheckoutSessionAction(formData: unknown) {
   try {

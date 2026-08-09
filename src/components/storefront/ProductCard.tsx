@@ -34,6 +34,13 @@ export function ProductCard({ product, onAddedToCart }: ProductCardProps) {
 
     if (res.success) {
       setJustAdded(true)
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('cart-updated', {
+            detail: { title: product.title, quantity: 1 },
+          })
+        )
+      }
       if (onAddedToCart) onAddedToCart()
       setTimeout(() => setJustAdded(false), 2000)
     }

@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { Header } from '@/components/storefront/Header'
 import { Footer } from '@/components/storefront/Footer'
 import { ProductCard } from '@/components/storefront/ProductCard'
+import { CatalogControls } from '@/components/storefront/CatalogControls'
 import { getProductsAction, getCategoriesAction } from '@/actions/product-actions'
-import { Search, SlidersHorizontal, ArrowUpDown } from 'lucide-react'
 
 export interface ShopPageProps {
   searchParams: Promise<{
@@ -40,109 +40,53 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-        {/* Header Title */}
-        <div className="space-y-4 mb-8">
-          <span className="text-xs font-semibold uppercase tracking-widest text-accent-terracotta">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 w-full">
+        {/* Header Title Banner */}
+        <div className="space-y-2 sm:space-y-4 mb-6 sm:mb-8">
+          <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-accent-terracotta">
             Storefront Catalog
           </span>
-          <h1 className="text-4xl sm:text-5xl font-serif font-bold text-foreground">
+          <h1 className="text-2xl sm:text-5xl font-serif font-bold text-foreground tracking-tight">
             Architectural Furniture
           </h1>
-          <p className="text-muted-foreground text-sm max-w-xl">
+          <p className="text-stone-700 font-medium text-xs sm:text-sm max-w-xl leading-relaxed">
             Explore our curated catalog of sculptural seating, oak dining tables, mouth-blown lighting, and modular walnut credenzas.
           </p>
         </div>
 
-        {/* Filter Controls & Search Bar */}
-        <div className="bg-card border border-border p-4 rounded-2xl shadow-sm mb-10 space-y-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            {/* Category Tabs */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full md:w-auto pb-1 md:pb-0">
-              <Link
-                href="/shop"
-                className={`px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-colors whitespace-nowrap ${
-                  !categorySlug
-                    ? 'bg-foreground text-background shadow-sm'
-                    : 'bg-muted text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                All Products
-              </Link>
-              {categories.map((cat: any) => (
-                <Link
-                  key={cat.id}
-                  href={`/shop?category=${cat.slug}${searchQuery ? `&search=${searchQuery}` : ''}`}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-colors whitespace-nowrap ${
-                    categorySlug === cat.slug
-                      ? 'bg-foreground text-background shadow-sm'
-                      : 'bg-muted text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {cat.name}
-                </Link>
-              ))}
-            </div>
+        {/* Filter Controls & Sort Dropdown Bar */}
+        <CatalogControls
+          categories={categories}
+          selectedCategory={categorySlug}
+          selectedSort={sortBy}
+        />
 
-            {/* Sort Selector */}
-            <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-              <span className="text-xs font-semibold uppercase text-muted-foreground hidden sm:inline">Sort:</span>
-              <div className="flex items-center gap-2">
-                <Link
-                  href={`/shop?${categorySlug ? `category=${categorySlug}&` : ''}sort=featured`}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium ${
-                    sortBy === 'featured' ? 'bg-accent-warm text-white font-semibold' : 'text-muted-foreground hover:bg-muted'
-                  }`}
-                >
-                  Featured
-                </Link>
-                <Link
-                  href={`/shop?${categorySlug ? `category=${categorySlug}&` : ''}sort=price-asc`}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium ${
-                    sortBy === 'price-asc' ? 'bg-accent-warm text-white font-semibold' : 'text-muted-foreground hover:bg-muted'
-                  }`}
-                >
-                  Price: Low to High
-                </Link>
-                <Link
-                  href={`/shop?${categorySlug ? `category=${categorySlug}&` : ''}sort=price-desc`}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium ${
-                    sortBy === 'price-desc' ? 'bg-accent-warm text-white font-semibold' : 'text-muted-foreground hover:bg-muted'
-                  }`}
-                >
-                  Price: High to Low
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Results Counter */}
-        <div className="flex items-center justify-between mb-6 text-xs text-muted-foreground">
-          <span>Showing <strong className="text-foreground font-semibold">{products.length}</strong> architectural pieces</span>
+        {/* Results Counter & Clear Filter */}
+        <div className="flex items-center justify-between mb-4 sm:mb-6 text-xs text-stone-600">
+          <span>Showing <strong className="text-foreground font-semibold">{products.length}</strong> pieces</span>
           {categorySlug && (
-            <Link href="/shop" className="text-accent-terracotta hover:underline font-semibold">
-              Clear Category Filter
+            <Link href="/shop" className="text-accent-terracotta hover:underline font-semibold text-xs shrink-0">
+              Clear Filter
             </Link>
           )}
         </div>
 
-        {/* Product Grid */}
+        {/* Product Grid (2-Column on Mobile, 3 on Tablet, 4 on Desktop) */}
         {products.length === 0 ? (
-          <div className="bg-card border border-border rounded-2xl p-16 text-center space-y-4 my-12">
-            <h3 className="font-serif text-xl font-semibold text-foreground">No furniture pieces match your search</h3>
-            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+          <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-8 sm:p-16 text-center space-y-3 sm:space-y-4 my-6 sm:my-12">
+            <h3 className="font-serif text-lg sm:text-xl font-semibold text-foreground">No furniture pieces match your search</h3>
+            <p className="text-xs sm:text-sm text-stone-600 max-w-sm mx-auto">
               Try adjusting your category filter or search keywords.
             </p>
             <Link
               href="/shop"
-              className="inline-block px-6 py-3 bg-foreground text-background text-xs font-semibold uppercase tracking-wider rounded-full hover:bg-accent-warm hover:text-white transition-all"
+              className="inline-block px-5 py-2.5 sm:px-6 sm:py-3 bg-foreground text-background text-xs font-semibold uppercase tracking-wider rounded-full hover:bg-accent-warm hover:text-white transition-all"
             >
               Reset Filters
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
             {products.map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}
