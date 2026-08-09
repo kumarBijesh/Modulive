@@ -40,6 +40,12 @@ yarn-error.log*
 .idea/
 *.swp
 *.swo
+.gemini/
+.antigravity/
+
+# Agent Metadata & Prompts
+.agents/
+MASTER_BUILD_PROMPT.md
 
 # OS files
 .DS_Store
