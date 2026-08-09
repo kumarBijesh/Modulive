@@ -33,8 +33,8 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   })
 
   const categoriesRes = await getCategoriesAction()
-  const products = productsRes.products || []
-  const categories = categoriesRes.categories || []
+  const products = productsRes.success && 'products' in productsRes ? productsRes.products : []
+  const categories = categoriesRes.success && 'categories' in categoriesRes ? categoriesRes.categories : []
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -69,7 +69,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
               >
                 All Products
               </Link>
-              {categories.map((cat) => (
+              {categories.map((cat: any) => (
                 <Link
                   key={cat.id}
                   href={`/shop?category=${cat.slug}${searchQuery ? `&search=${searchQuery}` : ''}`}
@@ -143,7 +143,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {products.map((product) => (
+            {products.map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

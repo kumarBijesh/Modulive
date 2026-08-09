@@ -12,8 +12,8 @@ export default async function HomePage() {
   const productsRes = await getProductsAction({ sortBy: 'featured' })
   const categoriesRes = await getCategoriesAction()
 
-  const featuredProducts = productsRes.products?.slice(0, 4) || []
-  const categories = categoriesRes.categories || []
+  const featuredProducts = (productsRes.success && 'products' in productsRes ? productsRes.products : []).slice(0, 4)
+  const categories = categoriesRes.success && 'categories' in categoriesRes ? categoriesRes.categories : []
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -44,7 +44,7 @@ export default async function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {categories.map((cat) => (
+              {categories.map((cat: any) => (
                 <Link
                   key={cat.id}
                   href={`/shop?category=${cat.slug}`}
@@ -83,7 +83,7 @@ export default async function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {featuredProducts.map((product) => (
+              {featuredProducts.map((product: any) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>

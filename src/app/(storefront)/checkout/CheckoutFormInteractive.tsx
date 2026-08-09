@@ -69,7 +69,7 @@ export function CheckoutFormInteractive({ cart }: CheckoutFormInteractiveProps) 
     if (res.success && res.checkoutUrl) {
       router.push(res.checkoutUrl)
     } else {
-      setError(res.error || 'Failed to initialize checkout')
+      setError('error' in res ? (res as { error: string }).error : 'Failed to initialize checkout')
     }
   }
 

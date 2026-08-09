@@ -25,7 +25,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
   const product = res.product
   const relatedRes = await getProductsAction({ categorySlug: product.category.slug })
-  const relatedProducts = (relatedRes.products || []).filter((p) => p.id !== product.id).slice(0, 4)
+  const relatedProducts = (relatedRes.success && 'products' in relatedRes ? relatedRes.products : []).filter((p: any) => p.id !== product.id).slice(0, 4)
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -107,7 +107,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map((item) => (
+              {relatedProducts.map((item: any) => (
                 <ProductCard key={item.id} product={item} />
               ))}
             </div>

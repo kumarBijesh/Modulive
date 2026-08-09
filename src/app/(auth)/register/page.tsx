@@ -35,7 +35,7 @@ export default function RegisterPage() {
     if (res.success) {
       router.push('/account')
     } else {
-      setError(res.error || 'Registration failed')
+      setError('error' in res ? (res as { error: string }).error : 'Registration failed')
     }
   }
 
